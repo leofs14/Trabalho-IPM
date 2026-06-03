@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IPSantarém Canteen</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange: #E8600A;
+      --orange-dark: #7C3202;
+      --orange-light: #FFF0E6;
+      --blue: #2979FF;
+      --teal: #00B4D8;
+      --text: #1a1a1a;
+      --muted: #777;
+      --bg: #F5F5F5;
+      --card: #fff;
+      --border: #e0e0e0;
+      --nav-h: 64px;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #1a1a2e;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── MOBILE SHELL ── */
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: var(--bg);
+      border-radius: 40px;
+      border: 8px solid #555;
+      box-shadow: 0 30px 80px rgba(0,0,0,.6);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* ── DESKTOP LAYOUT ── */
+    .desktop-sidebar {
+      display: none;
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+    }
+    .screen.active { display: flex; }
+
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px 16px;
+      scrollbar-width: none;
+    }
+    .scroll-area::-webkit-scrollbar { display: none; }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 16px 8px;
+      background: var(--bg);
+    }
+    .header-title {
+      color: var(--orange);
+      font-weight: 700;
+      font-size: 17px;
+    }
+    .header-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: #ccc;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .hamburger { font-size: 22px; color: var(--text); cursor: pointer; }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      display: flex;
+      height: var(--nav-h);
+      background: #fff;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      color: var(--muted);
+      transition: color .2s;
+    }
+    .nav-item .nav-icon {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      transition: background .2s;
+    }
+    .nav-item.active { color: var(--orange); }
+    .nav-item.active .nav-icon { background: var(--orange); color: #fff; }
+
+    /* ── HOME SCREEN ── */
+    .greeting-name { font-size: 22px; font-weight: 700; margin-bottom: 2px; }
+    .greeting-date { color: var(--muted); font-size: 14px; margin-bottom: 16px; }
+
+    .balance-card {
+      background: var(--orange);
+      border-radius: 16px;
+      padding: 20px;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+    .balance-label {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 14px; opacity: .9; margin-bottom: 8px;
+    }
+    .balance-amount { font-size: 38px; font-weight: 800; margin-bottom: 16px; }
+    .balance-actions { display: flex; gap: 10px; }
+    .btn-topup {
+      background: var(--orange-dark);
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      padding: 10px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .btn-history {
+      background: rgba(255,255,255,.25);
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      padding: 10px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .quick-btn {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .quick-btn .icon-circle {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+    }
+    .icon-blue { background: var(--blue); color: #fff; }
+    .icon-teal { background: var(--teal); color: #fff; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .section-title { font-size: 17px; font-weight: 700; }
+    .section-sub { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+
+    .queue-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-left: 4px solid;
+    }
+    .queue-card.blue { border-color: var(--blue); }
+    .queue-card.orange { border-color: var(--orange); }
+    .queue-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .queue-status { font-size: 12px; display: flex; align-items: center; gap: 4px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .dot-blue { background: var(--blue); }
+    .dot-orange { background: var(--orange); }
+    .queue-time { text-align: right; }
+    .queue-min { font-size: 22px; font-weight: 800; }
+    .queue-min.blue { color: var(--blue); }
+    .queue-min.orange { color: var(--orange); }
+    .queue-label { font-size: 11px; color: var(--muted); }
+
+    /* ── MENU SCREEN ── */
+    .menu-title { font-size: 22px; font-weight: 700; margin-bottom: 14px; }
+
+    .filter-chips {
+      display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .chip {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+      cursor: pointer;
+      background: #fff;
+      display: flex; align-items: center; gap: 4px;
+      transition: all .2s;
+    }
+    .chip.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+
+    .day-selector {
+      display: flex; gap: 6px; margin-bottom: 20px;
+    }
+    .day-btn {
+      flex: 1;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 8px 4px;
+      border-radius: 12px;
+      border: none; background: #fff;
+      font-size: 12px; color: var(--muted);
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .day-btn .day-num { font-size: 18px; font-weight: 700; color: var(--text); }
+    .day-btn.active { background: var(--orange); color: #fff; }
+    .day-btn.active .day-num { color: #fff; }
+
+    .meal-card {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .meal-img {
+      width: 100%; height: 180px;
+      object-fit: cover;
+      background: #ddd;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px;
+      position: relative;
+    }
+    .meal-tag {
+      position: absolute; top: 12px; left: 12px;
+      background: rgba(0,0,0,.55);
+      color: #fff;
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 12px;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .meal-body { padding: 14px; }
+    .meal-name { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .meal-desc { font-size: 13px; color: var(--muted); margin-bottom: 12px; line-height: 1.4; }
+    .meal-footer { display: flex; align-items: center; justify-content: space-between; }
+    .meal-kcal { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+    .btn-reserve {
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ── TICKETS SCREEN ── */
+    .tab-bar {
+      display: flex;
+      background: #fff;
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }
+    .tab-btn {
+      flex: 1; padding: 10px; border: none; background: transparent;
+      border-radius: 9px; font-size: 14px; font-weight: 600;
+      cursor: pointer; color: var(--muted); transition: all .2s;
+    }
+    .tab-btn.active { background: var(--orange); color: #fff; }
+
+    .ticket-card {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    }
+    .ticket-stripe {
+      height: 6px;
+      background: linear-gradient(90deg, var(--orange), var(--teal));
+    }
+    .ticket-body { padding: 20px; text-align: center; }
+    .ticket-badge {
+      display: inline-block;
+      background: var(--teal);
+      color: #fff;
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+    .ticket-meal { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+    .ticket-info { font-size: 13px; color: var(--muted); display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 4px; }
+    .qr-wrapper {
+      background: var(--orange-light);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 16px 0;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+    }
+    .qr-code {
+      width: 120px; height: 120px;
+      display: grid;
+      grid-template-columns: repeat(7,1fr);
+      gap: 2px;
+    }
+    .qr-cell { border-radius: 1px; }
+    .qr-dark { background: var(--orange); }
+    .qr-light { background: transparent; }
+    .qr-label { font-size: 12px; color: var(--muted); }
+
+    .ticket-actions { display: flex; gap: 10px; margin-top: 4px; }
+    .btn-transfer {
+      flex: 1; padding: 10px; border: 1px solid var(--orange);
+      border-radius: 20px; background: #fff; color: var(--orange);
+      font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    .btn-cancel {
+      flex: 1; padding: 10px; border: 1px solid #e57373;
+      border-radius: 20px; background: #fff; color: #e57373;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+
+    .upcoming-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+    .upcoming-item {
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .upcoming-icon {
+      width: 42px; height: 42px;
+      background: var(--blue);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 20px; flex-shrink: 0;
+    }
+    .upcoming-name { font-size: 14px; font-weight: 600; }
+    .upcoming-time { font-size: 12px; color: var(--muted); }
+    .upcoming-arrow { margin-left: auto; color: var(--muted); }
+
+    /* ═══════════════════════════════════════
+       DESKTOP RESPONSIVE (≥ 900px)
+    ═══════════════════════════════════════ */
+    @media (min-width: 900px) {
+      body {
+        background: #f0f2f5;
+        align-items: stretch;
+        justify-content: stretch;
+      }
+
+      .phone { display: none; }
+
+      .desktop-app {
+        display: flex;
+        width: 100vw;
+        min-height: 100vh;
+      }
+
+      /* Sidebar nav */
+      .desktop-sidebar {
+        display: flex;
+        flex-direction: column;
+        width: 240px;
+        background: #fff;
+        border-right: 1px solid var(--border);
+        padding: 32px 0;
+        flex-shrink: 0;
+      }
+      .sidebar-logo {
+        padding: 0 24px 32px;
+        color: var(--orange);
+        font-size: 18px;
+        font-weight: 800;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .sidebar-nav-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 24px;
+        cursor: pointer;
+        font-size: 15px;
+        color: var(--muted);
+        font-weight: 500;
+        border-radius: 0 24px 24px 0;
+        margin-right: 16px;
+        transition: all .2s;
+      }
+      .sidebar-nav-item.active {
+        background: var(--orange-light);
+        color: var(--orange);
+        font-weight: 700;
+      }
+      .sidebar-nav-item .s-icon { font-size: 20px; }
+
+      /* Main content */
+      .desktop-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .desktop-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 40px;
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+      }
+      .desktop-header-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .desktop-header-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .desktop-avatar {
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: #fff;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 700; font-size: 16px;
+      }
+      .desktop-user { font-size: 14px; font-weight: 600; }
+
+      .desktop-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 32px 40px;
+      }
+
+      /* Desktop screen wrapper */
+      .desktop-screen { display: none; }
+      .desktop-screen.active { display: block; }
+
+      /* Desktop Home */
+      .desktop-home-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        max-width: 960px;
+      }
+      .desktop-home-grid .balance-card { margin-bottom: 0; }
+      .desktop-home-grid .quick-actions { margin-bottom: 0; }
+      .queue-section { grid-column: 1 / -1; }
+
+      /* Desktop Menu */
+      .desktop-menu-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 960px;
+      }
+      .desktop-menu-controls {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .desktop-menu-controls .day-selector {
+        margin-bottom: 0;
+        flex: 1;
+      }
+      .desktop-menu-controls .filter-chips { margin-bottom: 0; }
+
+      /* Desktop Tickets */
+      .desktop-tickets-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        max-width: 800px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ MOBILE ═══ -->
+<div class="phone" id="mobileApp">
+
+  <!-- HOME -->
+  <div class="screen active" id="m-home">
+    <div class="header">
+      <span class="hamburger">☰</span>
+      <span class="header-title">IPSantarém Cante...</span>
+      <div class="header-avatar">👤</div>
+    </div>
+    <div class="scroll-area">
+      <div class="greeting-name">Good Morning, Alex!</div>
+      <div class="greeting-date">Wednesday, October 25</div>
+
+      <div class="balance-card">
+        <div class="balance-label">🪙 Current Balance</div>
+        <div class="balance-amount">12.50€</div>
+        <div class="balance-actions">
+          <button class="btn-topup">+ Top Up</button>
+          <button class="btn-history">History</button>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+        <div class="quick-btn">
+          <div class="icon-circle icon-blue">🍴</div>
+          Reserve Meal
+        </div>
+        <div class="quick-btn">
+          <div class="icon-circle icon-teal">📲</div>
+          Show Ticket
+        </div>
+      </div>
+
+      <div class="section-header">
+        <span class="section-title">Live Queue Status</span>
+        <span class="section-sub">🔄 Updated just now</span>
+      </div>
+
+      <div class="queue-card blue">
+        <div>
+          <div class="queue-name">Main Canteen</div>
+          <div class="queue-status"><span class="dot dot-blue"></span> Moderate</div>
+        </div>
+        <div class="queue-time">
+          <div class="queue-min blue">15 min</div>
+          <div class="queue-label">Wait time</div>
+        </div>
+      </div>
+
+      <div class="queue-card orange">
+        <div>
+          <div class="queue-name">Snack Bar</div>
+          <div class="queue-status"><span class="dot dot-orange"></span> Filling Fast</div>
+        </div>
+        <div class="queue-time">
+          <div class="queue-min orange">5 min</div>
+          <div class="queue-label">Wait time</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="bottom-nav">
+      <div class="nav-item active" onclick="switchScreen('home')">
+        <div class="nav-icon">⊞</div>Home
+      </div>
+      <div class="nav-item" onclick="switchScreen('menu')">
+        <div class="nav-icon">🍽</div>Menu
+      </div>
+      <div class="nav-item" onclick="switchScreen('payments')">
+        <div class="nav-icon">💳</div>Payments
+      </div>
+      <div class="nav-item" onclick="switchScreen('tickets')">
+        <div class="nav-icon">🎫</div>Tickets
+      </div>
+    </nav>
+  </div>
+
+  <!-- MENU -->
+  <div class="screen" id="m-menu">
+    <div class="header">
+      <span class="hamburger">☰</span>
+      <span class="header-title">IPSantarém Canteen</span>
+      <div class="header-avatar">👤</div>
+    </div>
+    <div class="scroll-area">
+      <div class="menu-title">This Week's Menu</div>
+
+      <div class="filter-chips">
+        <div class="chip active">All</div>
+        <div class="chip">🌿 Vegan</div>
+        <div class="chip">🛡 Gluten-Free</div>
+      </div>
+
+      <div class="day-selector">
+        <button class="day-btn"><span style="font-size:11px">Mon</span><span class="day-num">12</span></button>
+        <button class="day-btn active"><span style="font-size:11px">Tue</span><span class="day-num">13</span></button>
+        <button class="day-btn"><span style="font-size:11px">Wed</span><span class="day-num">14</span></button>
+        <button class="day-btn"><span style="font-size:11px">Thu</span><span class="day-num">15</span></button>
+        <button class="day-btn"><span style="font-size:11px">Fri</span><span class="day-num">16</span></button>
+      </div>
+
+      <div class="meal-card">
+        <div class="meal-img" style="background:#8B5A2B; font-size:64px; position:relative;">
+          🥩
+          <div class="meal-tag">🥩 Meat</div>
+        </div>
+        <div class="meal-body">
+          <div class="meal-name">Roasted Chicken with Herbed Potatoes</div>
+          <div class="meal-desc">A classic roasted chicken breast served with crispy seasoned potatoes and a side of...</div>
+          <div class="meal-footer">
+            <div class="meal-kcal">🔥 520 kcal</div>
+            <button class="btn-reserve">Reserve</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="meal-card">
+        <div class="meal-img" style="background:#4A7C59; font-size:64px; position:relative;">
+          🐟
+          <div class="meal-tag">🐟 Fish</div>
+        </div>
+        <div class="meal-body">
+          <div class="meal-name">Grilled Salmon with Lemon Rice</div>
+          <div class="meal-desc">Pan-seared salmon fillet with fluffy lemon rice and seasonal vegetables...</div>
+          <div class="meal-footer">
+            <div class="meal-kcal">🔥 480 kcal</div>
+            <button class="btn-reserve">Reserve</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="meal-card">
+        <div class="meal-img" style="background:#5A7A3A; font-size:64px; position:relative;">
+          🥗
+          <div class="meal-tag">🌿 Vegetarian</div>
+        </div>
+        <div class="meal-body">
+          <div class="meal-name">Veggie Buddha Bowl</div>
+          <div class="meal-desc">A nourishing bowl with roasted chickpeas, quinoa, avocado, and tahini dressing...</div>
+          <div class="meal-footer">
+            <div class="meal-kcal">🔥 390 kcal</div>
+            <button class="btn-reserve">Reserve</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="bottom-nav">
+      <div class="nav-item" onclick="switchScreen('home')">
+        <div class="nav-icon">⊞</div>Home
+      </div>
+      <div class="nav-item active" onclick="switchScreen('menu')">
+        <div class="nav-icon">🍽</div>Menu
+      </div>
+      <div class="nav-item" onclick="switchScreen('payments')">
+        <div class="nav-icon">💳</div>Payments
+      </div>
+      <div class="nav-item" onclick="switchScreen('tickets')">
+        <div class="nav-icon">🎫</div>Tickets
+      </div>
+    </nav>
+  </div>
+
+  <!-- PAYMENTS (placeholder) -->
+  <div class="screen" id="m-payments">
+    <div class="header">
+      <span class="hamburger">☰</span>
+      <span class="header-title">IPSantarém Canteen</span>
+      <div class="header-avatar">👤</div>
+    </div>
+    <div class="scroll-area" style="display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:16px;">
+      💳 Payments
+    </div>
+    <nav class="bottom-nav">
+      <div class="nav-item" onclick="switchScreen('home')"><div class="nav-icon">⊞</div>Home</div>
+      <div class="nav-item" onclick="switchScreen('menu')"><div class="nav-icon">🍽</div>Menu</div>
+      <div class="nav-item active" onclick="switchScreen('payments')"><div class="nav-icon">💳</div>Payments</div>
+      <div class="nav-item" onclick="switchScreen('tickets')"><div class="nav-icon">🎫</div>Tickets</div>
+    </nav>
+  </div>
+
+  <!-- TICKETS -->
+  <div class="screen" id="m-tickets">
+    <div class="header">
+      <span class="hamburger">☰</span>
+      <span class="header-title">IPSantarém Cante...</span>
+      <div class="header-avatar">👧</div>
+    </div>
+    <div class="scroll-area">
+      <div class="tab-bar">
+        <button class="tab-btn active">Active Tickets</button>
+        <button class="tab-btn">History</button>
+      </div>
+
+      <div class="ticket-card">
+        <div class="ticket-stripe"></div>
+        <div class="ticket-body">
+          <div class="ticket-badge">VALID TODAY</div>
+          <div class="ticket-meal">Lunch - Standard Meal</div>
+          <div class="ticket-info">🍴 Main Campus Canteen</div>
+          <div class="ticket-info">📅 Oct 26, 12:00 – 14:30</div>
+          <div class="qr-wrapper">
+            <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <!-- QR pattern decorativo -->
+              <rect width="120" height="120" fill="#FFF0E6" rx="8"/>
+              <!-- finder top-left -->
+              <rect x="10" y="10" width="30" height="30" rx="4" fill="#E8600A"/>
+              <rect x="15" y="15" width="20" height="20" rx="2" fill="#FFF0E6"/>
+              <rect x="18" y="18" width="14" height="14" rx="1" fill="#E8600A"/>
+              <!-- finder top-right -->
+              <rect x="80" y="10" width="30" height="30" rx="4" fill="#E8600A"/>
+              <rect x="85" y="15" width="20" height="20" rx="2" fill="#FFF0E6"/>
+              <rect x="88" y="18" width="14" height="14" rx="1" fill="#E8600A"/>
+              <!-- finder bottom-left -->
+              <rect x="10" y="80" width="30" height="30" rx="4" fill="#E8600A"/>
+              <rect x="15" y="85" width="20" height="20" rx="2" fill="#FFF0E6"/>
+              <rect x="18" y="88" width="14" height="14" rx="1" fill="#E8600A"/>
+              <!-- data dots -->
+              <rect x="50" y="10" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="60" y="10" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="50" y="20" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="70" y="20" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="60" y="30" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="10" y="50" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="20" y="50" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="10" y="60" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="30" y="60" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="20" y="70" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="50" y="50" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="60" y="50" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="70" y="50" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="80" y="50" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="100" y="50" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="50" y="60" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="80" y="60" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="90" y="60" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="60" y="70" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="70" y="70" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="100" y="70" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="50" y="80" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="70" y="90" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="80" y="80" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="90" y="90" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="100" y="80" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="50" y="100" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="60" y="100" width="6" height="6" rx="1" fill="#E8600A"/>
+              <rect x="100" y="100" width="6" height="6" rx="1" fill="#E8600A"/>
+            </svg>
+            <div class="qr-label">Scan at the terminal</div>
+          </div>
+          <div class="ticket-actions">
+            <button class="btn-transfer">Transfer</button>
+            <button class="btn-cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="upcoming-title">Upcoming</div>
+      <div class="upcoming-item">
+        <div class="upcoming-icon">🍴</div>
+        <div>
+          <div class="upcoming-name">Dinner – Vegetarian</div>
+          <div class="upcoming-time">Tomorrow, 19:00</div>
+        </div>
+        <div class="upcoming-arrow">›</div>
+      </div>
+    </div>
+
+    <nav class="bottom-nav">
+      <div class="nav-item" onclick="switchScreen('home')"><div class="nav-icon">⊞</div>Home</div>
+      <div class="nav-item" onclick="switchScreen('menu')"><div class="nav-icon">🍽</div>Menu</div>
+      <div class="nav-item" onclick="switchScreen('payments')"><div class="nav-icon">💳</div>Payments</div>
+      <div class="nav-item active" onclick="switchScreen('tickets')"><div class="nav-icon">🎫</div>Tickets</div>
+    </nav>
+  </div>
+</div><!-- /phone -->
+
+<!-- ═══ DESKTOP ═══ -->
+<div class="desktop-app" id="desktopApp" style="display:none;">
+  <aside class="desktop-sidebar">
+    <div class="sidebar-logo">🍽 IPSantarém</div>
+    <div class="sidebar-nav-item active" id="ds-home" onclick="dSwitch('home')">
+      <span class="s-icon">⊞</span> Home
+    </div>
+    <div class="sidebar-nav-item" id="ds-menu" onclick="dSwitch('menu')">
+      <span class="s-icon">🍽</span> Menu
+    </div>
+    <div class="sidebar-nav-item" id="ds-payments" onclick="dSwitch('payments')">
+      <span class="s-icon">💳</span> Payments
+    </div>
+    <div class="sidebar-nav-item" id="ds-tickets" onclick="dSwitch('tickets')">
+      <span class="s-icon">🎫</span> Tickets
+    </div>
+  </aside>
+
+  <div class="desktop-main">
+    <div class="desktop-header">
+      <div class="desktop-header-title" id="d-header-title">Home</div>
+      <div class="desktop-header-right">
+        <div class="desktop-user">Alex</div>
+        <div class="desktop-avatar">A</div>
+      </div>
+    </div>
+
+    <div class="desktop-content">
+
+      <!-- D-HOME -->
+      <div class="desktop-screen active" id="d-home">
+        <div style="margin-bottom:24px;">
+          <div class="greeting-name">Good Morning, Alex!</div>
+          <div class="greeting-date">Wednesday, October 25</div>
+        </div>
+        <div class="desktop-home-grid">
+          <div class="balance-card">
+            <div class="balance-label">🪙 Current Balance</div>
+            <div class="balance-amount">12.50€</div>
+            <div class="balance-actions">
+              <button class="btn-topup">+ Top Up</button>
+              <button class="btn-history">History</button>
+            </div>
+          </div>
+          <div class="quick-actions">
+            <div class="quick-btn">
+              <div class="icon-circle icon-blue">🍴</div>Reserve Meal
+            </div>
+            <div class="quick-btn">
+              <div class="icon-circle icon-teal">📲</div>Show Ticket
+            </div>
+          </div>
+          <div class="queue-section">
+            <div class="section-header">
+              <span class="section-title">Live Queue Status</span>
+              <span class="section-sub">🔄 Updated just now</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div class="queue-card blue">
+                <div>
+                  <div class="queue-name">Main Canteen</div>
+                  <div class="queue-status"><span class="dot dot-blue"></span> Moderate</div>
+                </div>
+                <div class="queue-time">
+                  <div class="queue-min blue">15 min</div>
+                  <div class="queue-label">Wait time</div>
+                </div>
+              </div>
+              <div class="queue-card orange">
+                <div>
+                  <div class="queue-name">Snack Bar</div>
+                  <div class="queue-status"><span class="dot dot-orange"></span> Filling Fast</div>
+                </div>
+                <div class="queue-time">
+                  <div class="queue-min orange">5 min</div>
+                  <div class="queue-label">Wait time</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D-MENU -->
+      <div class="desktop-screen" id="d-menu">
+        <div class="menu-title">This Week's Menu</div>
+        <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:20px;">
+          <div class="filter-chips" style="margin-bottom:0">
+            <div class="chip active">All</div>
+            <div class="chip">🌿 Vegan</div>
+            <div class="chip">🛡 Gluten-Free</div>
+          </div>
+          <div class="day-selector" style="margin-bottom:0;flex:1;max-width:400px;">
+            <button class="day-btn"><span style="font-size:11px">Mon</span><span class="day-num">12</span></button>
+            <button class="day-btn active"><span style="font-size:11px">Tue</span><span class="day-num">13</span></button>
+            <button class="day-btn"><span style="font-size:11px">Wed</span><span class="day-num">14</span></button>
+            <button class="day-btn"><span style="font-size:11px">Thu</span><span class="day-num">15</span></button>
+            <button class="day-btn"><span style="font-size:11px">Fri</span><span class="day-num">16</span></button>
+          </div>
+        </div>
+        <div class="desktop-menu-grid">
+          <div class="meal-card">
+            <div class="meal-img" style="background:#8B5A2B;position:relative;font-size:64px;">🥩<div class="meal-tag">🥩 Meat</div></div>
+            <div class="meal-body">
+              <div class="meal-name">Roasted Chicken with Herbed Potatoes</div>
+              <div class="meal-desc">A classic roasted chicken breast served with crispy seasoned potatoes and a side of vegetables.</div>
+              <div class="meal-footer"><div class="meal-kcal">🔥 520 kcal</div><button class="btn-reserve">Reserve</button></div>
+            </div>
+          </div>
+          <div class="meal-card">
+            <div class="meal-img" style="background:#4A7C59;position:relative;font-size:64px;">🐟<div class="meal-tag">🐟 Fish</div></div>
+            <div class="meal-body">
+              <div class="meal-name">Grilled Salmon with Lemon Rice</div>
+              <div class="meal-desc">Pan-seared salmon fillet with fluffy lemon rice and seasonal vegetables on the side.</div>
+              <div class="meal-footer"><div class="meal-kcal">🔥 480 kcal</div><button class="btn-reserve">Reserve</button></div>
+            </div>
+          </div>
+          <div class="meal-card">
+            <div class="meal-img" style="background:#5A7A3A;position:relative;font-size:64px;">🥗<div class="meal-tag">🌿 Vegetarian</div></div>
+            <div class="meal-body">
+              <div class="meal-name">Veggie Buddha Bowl</div>
+              <div class="meal-desc">A nourishing bowl with roasted chickpeas, quinoa, avocado, and tahini dressing.</div>
+              <div class="meal-footer"><div class="meal-kcal">🔥 390 kcal</div><button class="btn-reserve">Reserve</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D-PAYMENTS -->
+      <div class="desktop-screen" id="d-payments">
+        <div style="display:flex;align-items:center;justify-content:center;height:300px;color:var(--muted);font-size:18px;">
+          💳 Payments
+        </div>
+      </div>
+
+      <!-- D-TICKETS -->
+      <div class="desktop-screen" id="d-tickets">
+        <div class="desktop-tickets-grid">
+          <div>
+            <div class="tab-bar" style="max-width:360px;margin-bottom:20px;">
+              <button class="tab-btn active">Active Tickets</button>
+              <button class="tab-btn">History</button>
+            </div>
+            <div class="ticket-card" style="max-width:360px;">
+              <div class="ticket-stripe"></div>
+              <div class="ticket-body">
+                <div class="ticket-badge">VALID TODAY</div>
+                <div class="ticket-meal">Lunch - Standard Meal</div>
+                <div class="ticket-info">🍴 Main Campus Canteen</div>
+                <div class="ticket-info">📅 Oct 26, 12:00 – 14:30</div>
+                <div class="qr-wrapper">
+                  <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="120" height="120" fill="#FFF0E6" rx="8"/>
+                    <rect x="10" y="10" width="30" height="30" rx="4" fill="#E8600A"/>
+                    <rect x="15" y="15" width="20" height="20" rx="2" fill="#FFF0E6"/>
+                    <rect x="18" y="18" width="14" height="14" rx="1" fill="#E8600A"/>
+                    <rect x="80" y="10" width="30" height="30" rx="4" fill="#E8600A"/>
+                    <rect x="85" y="15" width="20" height="20" rx="2" fill="#FFF0E6"/>
+                    <rect x="88" y="18" width="14" height="14" rx="1" fill="#E8600A"/>
+                    <rect x="10" y="80" width="30" height="30" rx="4" fill="#E8600A"/>
+                    <rect x="15" y="85" width="20" height="20" rx="2" fill="#FFF0E6"/>
+                    <rect x="18" y="88" width="14" height="14" rx="1" fill="#E8600A"/>
+                    <rect x="50" y="10" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="60" y="10" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="50" y="20" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="70" y="20" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="60" y="30" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="50" y="50" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="60" y="50" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="70" y="50" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="80" y="50" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="100" y="50" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="50" y="60" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="80" y="60" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="90" y="60" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="60" y="70" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="100" y="70" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="50" y="80" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="80" y="80" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="100" y="80" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="60" y="100" width="6" height="6" rx="1" fill="#E8600A"/>
+                    <rect x="100" y="100" width="6" height="6" rx="1" fill="#E8600A"/>
+                  </svg>
+                  <div class="qr-label">Scan at the terminal</div>
+                </div>
+                <div class="ticket-actions">
+                  <button class="btn-transfer">Transfer</button>
+                  <button class="btn-cancel">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="upcoming-title" style="margin-bottom:16px;">Upcoming</div>
+            <div class="upcoming-item">
+              <div class="upcoming-icon">🍴</div>
+              <div>
+                <div class="upcoming-name">Dinner – Vegetarian</div>
+                <div class="upcoming-time">Tomorrow, 19:00</div>
+              </div>
+              <div class="upcoming-arrow">›</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div><!-- /desktop-app -->
+
+<script>
+  const screens = ['home','menu','payments','tickets'];
+  const titles = { home:'Home', menu:'Menu', payments:'Payments', tickets:'Tickets' };
+
+  function isDesktop() { return window.innerWidth >= 900; }
+
+  function init() {
+    if (isDesktop()) {
+      document.getElementById('mobileApp').style.display = 'none';
+      document.getElementById('desktopApp').style.display = 'flex';
+    } else {
+      document.getElementById('mobileApp').style.display = '';
+      document.getElementById('desktopApp').style.display = 'none';
+    }
+  }
+
+  function switchScreen(name) {
+    screens.forEach(s => {
+      const el = document.getElementById('m-' + s);
+      if (el) el.classList.toggle('active', s === name);
+    });
+  }
+
+  function dSwitch(name) {
+    screens.forEach(s => {
+      const el = document.getElementById('d-' + s);
+      const nav = document.getElementById('ds-' + s);
+      if (el) el.classList.toggle('active', s === name);
+      if (nav) nav.classList.toggle('active', s === name);
+    });
+    document.getElementById('d-header-title').textContent = titles[name];
+  }
+
+  // Day selector interactivity
+  document.querySelectorAll('.day-selector').forEach(sel => {
+    sel.querySelectorAll('.day-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sel.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  });
+
+  // Filter chips interactivity
+  document.querySelectorAll('.filter-chips').forEach(group => {
+    group.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        group.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+      });
+    });
+  });
+
+  // Tab buttons
+  document.querySelectorAll('.tab-bar').forEach(bar => {
+    bar.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        bar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  });
+
+  window.addEventListener('resize', init);
+  init();
+</script>
+</body>
+</html>
