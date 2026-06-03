@@ -437,7 +437,8 @@
         color: var(--orange);
         font-weight: 700;
       }
-      .sidebar-nav-item .s-icon { font-size: 20px; }
+      .sidebar-nav-item .s-icon { display: flex; align-items: center; }
+      .sidebar-nav-item .s-icon svg { width: 20px; height: 20px; fill: currentColor; }
 
       /* Main content */
       .desktop-main {
@@ -636,8 +637,8 @@
           <div class="meal-tag">🥩 Meat</div>
         </div>
         <div class="meal-body">
-          <div class="meal-name">Roasted Chicken with Herbed Potatoes</div>
-          <div class="meal-desc">A classic roasted chicken breast served with crispy seasoned potatoes and a side of...</div>
+          <div class="meal-name">Grilled Steak with Salad</div>
+          <div class="meal-desc">A classic steak served with crispy and seasoned salad.</div>
           <div class="meal-footer">
             <div class="meal-kcal">🔥 520 kcal</div>
             <button class="btn-reserve">Reserve</button>
@@ -811,16 +812,16 @@
   <aside class="desktop-sidebar">
     <div class="sidebar-logo">🍽 IPSantarém</div>
     <div class="sidebar-nav-item active" id="ds-home" onclick="dSwitch('home')">
-      <span class="s-icon">⊞</span> Home
+      <span class="s-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span> Home
     </div>
     <div class="sidebar-nav-item" id="ds-menu" onclick="dSwitch('menu')">
-      <span class="s-icon">🍽</span> Menu
+      <span class="s-icon"><svg viewBox="0 0 24 24"><path d="M11 2v7a4 4 0 0 1-4 4v9H5v-9a4 4 0 0 1-4-4V2h2v6h2V2h2v6h2V2h2zM19 2v20h-2V14h-3V7a5 5 0 0 1 5-5z"/></svg></span> Menu
     </div>
     <div class="sidebar-nav-item" id="ds-payments" onclick="dSwitch('payments')">
-      <span class="s-icon">💳</span> Payments
+      <span class="s-icon"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="2" y="10" width="20" height="3" fill="currentColor"/></svg></span> Payments
     </div>
     <div class="sidebar-nav-item" id="ds-tickets" onclick="dSwitch('tickets')">
-      <span class="s-icon">🎫</span> Tickets
+      <span class="s-icon"><svg viewBox="0 0 24 24"><path d="M20 12a2 2 0 0 1 2-2V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2 2 2 0 0 1-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 1-2-2z"/></svg></span> Tickets
     </div>
   </aside>
 
@@ -910,8 +911,8 @@
           <div class="meal-card">
             <div class="meal-img" style="position:relative;"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80" alt="Meat" style="width:100%;height:180px;object-fit:cover;display:block;"/><div class="meal-tag">🥩 Meat</div></div>
             <div class="meal-body">
-              <div class="meal-name">Roasted Chicken with Herbed Potatoes</div>
-              <div class="meal-desc">A classic roasted chicken breast served with crispy seasoned potatoes and a side of vegetables.</div>
+              <div class="meal-name">Grilled Steak with Salad</div>
+              <div class="meal-desc">A classic steak served with a crispy and seasoned salad.</div>
               <div class="meal-footer"><div class="meal-kcal">🔥 520 kcal</div><button class="btn-reserve">Reserve</button></div>
             </div>
           </div>
