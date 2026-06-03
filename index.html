@@ -292,6 +292,137 @@
       cursor: pointer;
     }
 
+    /* ── PAYMENTS / CHECKOUT SCREEN ── */
+    .checkout-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: var(--bg);
+      position: relative;
+    }
+    .checkout-back {
+      position: absolute; left: 16px;
+      font-size: 20px; color: var(--orange);
+      cursor: pointer; font-weight: 700;
+    }
+    .checkout-title {
+      font-size: 18px; font-weight: 700;
+      color: var(--orange);
+    }
+
+    .order-summary-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 6px rgba(0,0,0,.06);
+    }
+    .order-summary-heading {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 16px; font-weight: 700;
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+    .order-item-row {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 14px;
+    }
+    .order-item-thumb {
+      width: 64px; height: 64px;
+      border-radius: 12px;
+      overflow: hidden; flex-shrink: 0;
+    }
+    .order-item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .order-item-details { flex: 1; }
+    .order-item-name { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+    .order-item-sub { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    .order-item-badge {
+      display: inline-block;
+      background: #eee; color: #555;
+      border-radius: 12px;
+      padding: 2px 10px;
+      font-size: 11px; font-weight: 600;
+    }
+    .order-item-price { font-size: 17px; font-weight: 800; color: var(--orange); }
+    .order-divider { border: none; border-top: 1px solid var(--border); margin: 0 0 12px; }
+    .order-total-row {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .order-total-label { font-size: 16px; font-weight: 700; }
+    .order-total-price { font-size: 20px; font-weight: 800; color: var(--orange); }
+
+    .pay-section-title { font-size: 18px; font-weight: 700; margin-bottom: 14px; }
+
+    .pay-option {
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all .2s;
+      background: #fff;
+    }
+    .pay-option.selected {
+      border-color: var(--blue);
+      background: #EEF4FF;
+    }
+    .pay-option-row {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .pay-radio {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: border-color .2s;
+    }
+    .pay-option.selected .pay-radio { border-color: var(--blue); }
+    .pay-radio-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--blue);
+      display: none;
+    }
+    .pay-option.selected .pay-radio-dot { display: block; }
+    .pay-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .pay-icon svg { width: 24px; height: 24px; }
+    .pay-option-info { flex: 1; }
+    .pay-option-name { font-size: 15px; font-weight: 700; }
+    .pay-option-sub { font-size: 12px; color: var(--muted); margin-top: 1px; }
+    .pay-input-wrap { margin-top: 12px; }
+    .pay-input-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    .pay-input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: 15px;
+      color: var(--text);
+      background: #fff;
+      outline: none;
+    }
+
+    .btn-pay-now {
+      width: 100%;
+      background: var(--orange-dark);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 8px;
+    }
+
     /* ── TICKETS SCREEN ── */
     .tab-bar {
       display: flex;
@@ -693,22 +824,109 @@
     </nav>
   </div>
 
-  <!-- PAYMENTS (placeholder) -->
+  <!-- PAYMENTS -->
   <div class="screen" id="m-payments">
-    <div class="header">
-      <span class="hamburger">☰</span>
-      <span class="header-title">IPSantarém Canteen</span>
-      <div class="header-avatar">👤</div>
+    <div class="checkout-header">
+      <span class="checkout-back" onclick="switchScreen('home')">←</span>
+      <span class="checkout-title">Checkout</span>
     </div>
-    <div class="scroll-area" style="display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:16px;">
-      💳 Payments
+    <div class="scroll-area" style="padding-bottom:80px;">
+
+      <!-- Order Summary -->
+      <div class="order-summary-card">
+        <div class="order-summary-heading">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="var(--orange)"><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="var(--orange)" stroke-width="2"/><line x1="7" y1="8" x2="17" y2="8" stroke="var(--orange)" stroke-width="2"/><line x1="7" y1="12" x2="17" y2="12" stroke="var(--orange)" stroke-width="2"/><line x1="7" y1="16" x2="13" y2="16" stroke="var(--orange)" stroke-width="2"/></svg>
+          Order Summary
+        </div>
+        <div class="order-item-row">
+          <div class="order-item-thumb">
+            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=200&q=80" alt="meal"/>
+          </div>
+          <div class="order-item-details">
+            <div class="order-item-name">Grilled Chicken Bowl</div>
+            <div class="order-item-sub">Lunch • Oct 24, 12:30 PM</div>
+            <span class="order-item-badge">High Protein</span>
+          </div>
+          <div class="order-item-price">2.50€</div>
+        </div>
+        <hr class="order-divider"/>
+        <div class="order-total-row">
+          <span class="order-total-label">Total</span>
+          <span class="order-total-price">2.50€</span>
+        </div>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="pay-section-title">Payment Method</div>
+
+      <!-- MBWay (selected) -->
+      <div class="pay-option selected" onclick="selectPay(this)">
+        <div class="pay-option-row">
+          <div class="pay-radio"><div class="pay-radio-dot"></div></div>
+          <div class="pay-icon" style="background:#EEF4FF;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2979FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+          </div>
+          <div class="pay-option-info">
+            <div class="pay-option-name">MB Way</div>
+          </div>
+        </div>
+        <div class="pay-input-wrap">
+          <div class="pay-input-label">Phone Number</div>
+          <input class="pay-input" type="tel" value="+351  912 345 678" readonly/>
+        </div>
+      </div>
+
+      <!-- University Card -->
+      <div class="pay-option" onclick="selectPay(this)">
+        <div class="pay-option-row">
+          <div class="pay-radio"><div class="pay-radio-dot"></div></div>
+          <div class="pay-icon" style="background:#F5F5F5;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <div class="pay-option-info">
+            <div class="pay-option-name">University Card</div>
+            <div class="pay-option-sub">Available Balance: 12.50€</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transferência Imediata -->
+      <div class="pay-option" onclick="selectPay(this)">
+        <div class="pay-option-row">
+          <div class="pay-radio"><div class="pay-radio-dot"></div></div>
+          <div class="pay-icon" style="background:#E8F5E9;">
+            <svg viewBox="0 0 24 24" fill="#00A859" width="22" height="22"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></svg>
+          </div>
+          <div class="pay-option-info">
+            <div class="pay-option-name">Transferência Imediata</div>
+            <div class="pay-option-sub">Pagamento bancário instantâneo</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PayPal -->
+      <div class="pay-option" onclick="selectPay(this)">
+        <div class="pay-option-row">
+          <div class="pay-radio"><div class="pay-radio-dot"></div></div>
+          <div class="pay-icon" style="background:#E8EEF7;">
+            <svg viewBox="0 0 24 24" fill="#003087" width="22" height="22"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.095zm14.146-14.42c-.59 3.025-2.566 4.643-5.813 4.643H12.56l-1.182 7.49h3.362c.524 0 .968-.382 1.05-.9l.86-5.452c.082-.518.526-.9 1.05-.9h.66c4.299 0 7.664-1.747 8.647-6.797.411-2.112.2-3.874-.885-5.266a3.35 3.35 0 0 0-.607-.541c-.59 3.025-.001.723-.319.723z"/></svg>
+          </div>
+          <div class="pay-option-info">
+            <div class="pay-option-name">PayPal</div>
+            <div class="pay-option-sub">Pagamento via conta PayPal</div>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <nav class="bottom-nav">
-      <div class="nav-item" onclick="switchScreen('home')"><div class="nav-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>Home</div>
-      <div class="nav-item" onclick="switchScreen('menu')"><div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M11 2v7a4 4 0 0 1-4 4v9H5v-9a4 4 0 0 1-4-4V2h2v6h2V2h2v6h2V2h2zM19 2v20h-2V14h-3V7a5 5 0 0 1 5-5z"/></svg></div>Menu</div>
-      <div class="nav-item active" onclick="switchScreen('payments')"><div class="nav-icon"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="2" y="10" width="20" height="3" fill="currentColor"/></svg></div>Payments</div>
-      <div class="nav-item" onclick="switchScreen('tickets')"><div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M20 12a2 2 0 0 1 2-2V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2 2 2 0 0 1-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 1-2-2z"/></svg></div>Tickets</div>
-    </nav>
+
+    <!-- Pay button fixed at bottom -->
+    <div style="padding:12px 16px;background:var(--bg);border-top:1px solid var(--border);">
+      <button class="btn-pay-now">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="18" height="18"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Pay 2.50€ Now
+      </button>
+    </div>
   </div>
 
   <!-- TICKETS -->
@@ -937,8 +1155,95 @@
 
       <!-- D-PAYMENTS -->
       <div class="desktop-screen" id="d-payments">
-        <div style="display:flex;align-items:center;justify-content:center;height:300px;color:var(--muted);font-size:18px;">
-          💳 Payments
+        <div style="display:grid;grid-template-columns:480px 1fr;gap:32px;max-width:960px;">
+          <!-- Left: checkout form -->
+          <div>
+            <div class="order-summary-card">
+              <div class="order-summary-heading">
+                <svg viewBox="0 0 24 24" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="var(--orange)" stroke-width="2"/><line x1="7" y1="8" x2="17" y2="8" stroke="var(--orange)" stroke-width="2"/><line x1="7" y1="12" x2="17" y2="12" stroke="var(--orange)" stroke-width="2"/><line x1="7" y1="16" x2="13" y2="16" stroke="var(--orange)" stroke-width="2"/></svg>
+                Order Summary
+              </div>
+              <div class="order-item-row">
+                <div class="order-item-thumb">
+                  <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=200&q=80" alt="meal"/>
+                </div>
+                <div class="order-item-details">
+                  <div class="order-item-name">Grilled Chicken Bowl</div>
+                  <div class="order-item-sub">Lunch • Oct 24, 12:30 PM</div>
+                  <span class="order-item-badge">High Protein</span>
+                </div>
+                <div class="order-item-price">2.50€</div>
+              </div>
+              <hr class="order-divider"/>
+              <div class="order-total-row">
+                <span class="order-total-label">Total</span>
+                <span class="order-total-price">2.50€</span>
+              </div>
+            </div>
+
+            <div class="pay-section-title">Payment Method</div>
+
+            <div class="pay-option selected" onclick="selectPay(this)">
+              <div class="pay-option-row">
+                <div class="pay-radio"><div class="pay-radio-dot"></div></div>
+                <div class="pay-icon" style="background:#EEF4FF;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#2979FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+                </div>
+                <div class="pay-option-info"><div class="pay-option-name">MB Way</div></div>
+              </div>
+              <div class="pay-input-wrap">
+                <div class="pay-input-label">Phone Number</div>
+                <input class="pay-input" type="tel" value="+351  912 345 678" readonly/>
+              </div>
+            </div>
+
+            <div class="pay-option" onclick="selectPay(this)">
+              <div class="pay-option-row">
+                <div class="pay-radio"><div class="pay-radio-dot"></div></div>
+                <div class="pay-icon" style="background:#F5F5F5;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                </div>
+                <div class="pay-option-info">
+                  <div class="pay-option-name">University Card</div>
+                  <div class="pay-option-sub">Available Balance: 12.50€</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pay-option" onclick="selectPay(this)">
+              <div class="pay-option-row">
+                <div class="pay-radio"><div class="pay-radio-dot"></div></div>
+                <div class="pay-icon" style="background:#E8F5E9;">
+                  <svg viewBox="0 0 24 24" fill="#00A859" width="22" height="22"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></svg>
+                </div>
+                <div class="pay-option-info">
+                  <div class="pay-option-name">Transferência Imediata</div>
+                  <div class="pay-option-sub">Pagamento bancário instantâneo</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pay-option" onclick="selectPay(this)">
+              <div class="pay-option-row">
+                <div class="pay-radio"><div class="pay-radio-dot"></div></div>
+                <div class="pay-icon" style="background:#E8EEF7;">
+                  <svg viewBox="0 0 24 24" fill="#003087" width="22" height="22"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.095zm14.146-14.42c-.59 3.025-2.566 4.643-5.813 4.643H12.56l-1.182 7.49h3.362c.524 0 .968-.382 1.05-.9l.86-5.452c.082-.518.526-.9 1.05-.9h.66c4.299 0 7.664-1.747 8.647-6.797.411-2.112.2-3.874-.885-5.266a3.35 3.35 0 0 0-.607-.541z"/></svg>
+                </div>
+                <div class="pay-option-info">
+                  <div class="pay-option-name">PayPal</div>
+                  <div class="pay-option-sub">Pagamento via conta PayPal</div>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn-pay-now" style="margin-top:16px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="18" height="18"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Pay 2.50€ Now
+            </button>
+          </div>
+
+          <!-- Right: empty space or future content -->
+          <div></div>
         </div>
       </div>
 
@@ -1038,6 +1343,11 @@
       const el = document.getElementById('m-' + s);
       if (el) el.classList.toggle('active', s === name);
     });
+  }
+
+  function selectPay(el) {
+    el.closest('.desktop-screen, .screen').querySelectorAll('.pay-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
   }
 
   function dSwitch(name) {
